@@ -1,0 +1,8 @@
+* 0.2
+  - Fixed ios::failbit problem with recent GNU C++ runtime libraries.
+  - Changed '--show-both' to '--show-shreds' and tweaked output format.
+  - Added an experimental '--show-matches' algorithm which attempts to
+    provide semi-usable information about TREE1.
+
+* 0.1
+  - Initial release.
