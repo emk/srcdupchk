@@ -1,7 +1,5 @@
-// -*- Mode: C++; indent-tabs-mode: nil; c-basic-offset: 4; -*-
-//
 // srcdupchk - Program to find duplication between two source trees.
-// Copyright (C) 2003 Eric Kidd <eric.kidd@pobox.com>
+// Copyright © 2003–2020 Eric Kidd
 //
 // This program is free software; you can redistribute it and/or modify it
 // under the terms of the GNU General Public License as published by the
@@ -51,7 +49,7 @@ class SourceTreeInfo {
     ShredMap m_map;
 
     void ProcessFile(const string &path);
-    
+
     void AddShred(const string &path, const Shred &shred);
 
 public:

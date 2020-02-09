@@ -1,6 +1,6 @@
 # `srcdupchk`: Program to find duplication between two source trees
 
-Copyright (C) 2003 Eric Kidd
+Copyright © 2003–2020 Eric Kidd
 
 _This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for more details._
 
