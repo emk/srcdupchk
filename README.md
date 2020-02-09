@@ -6,19 +6,29 @@ _This program is distributed in the hope that it will be useful, but WITHOUT ANY
 
 I originally wrote this program in 2003, when the tech press was full of allegations that the Linux kernel contained proprietary Unix code. At the time IBM was being sued by one of the historical incarnations of SCO.
 
-`srcdupchk` will take two trees of source code, and look for lines of code that are identical between the two trees. It has some heuristics tuned for C and C++ code, in order to reduce false positives.
+`srcdupchk` will take two trees of source code, and look for lines of code that are identical between the two trees. It has some heuristics tuned for C and C++ code, in order to reduce false positives. But it should work fairly well on any line-oriented input.
 
 This code was originally written in 24 hours in 2003. I've updated it to build on modern Linux systems and tweaked the output a little. All the test still pass, but proceed with appropriate caution: This code is old enough to drive.
 
 ## How to Install It
 
-This code works on Linux, and you can install it as follows:
+This code works on Linux, and it requires a C++ development environment. On Ubuntu, you can set things up using:
 
 ```sh
+sudo apt-get install build-essential
+```
+
+You should be able to install this program as follows:
+
+```sh
+git clone https://github.com/emk/srcdupchk.git
+cd srcdupchk
 ./configure
 make
 sudo make install
 ```
+
+This may or may not work on other Unix variants, including MacOS X or the Windows Subsystem For Linux.
 
 ## What It Does
 
@@ -81,10 +91,10 @@ Here's how we compute file shreds for a directory tree:
 2. For each file in the directory tree, check whether it is binary by looking at the first 512 characters.  If any of these characters are NULL, or more than 10% have the high bit set, assume the file is binary.
 
 3. For each non-binary file:
-  a. Read in all the lines in the file.
-  b. Normalize lines by removing the characters " \t\r/*{}".  This attempts to correct for differences in whitespace, commenting style and brace placement.
-  c. Discard empty lines and all lines beginning with "#include".  The latter don't contain useful information, and tend to generate false positives for small shred sizes.
-  d. Group the remaining lines into overlapping N-line chunks and calculate a 128-bit cryptographic hash for each chunk.
+    - Read in all the lines in the file.
+    - Normalize lines by removing the characters " \t\r/*{}".  This attempts to correct for differences in whitespace, commenting style and brace placement.
+    - Discard empty lines and all lines beginning with "#include".  The latter don't contain useful information, and tend to generate false positives for small shred sizes.
+    - Group the remaining lines into overlapping N-line chunks and calculate a 128-bit cryptographic hash for each chunk.
 
 About cryptographic hashes: On average, you'd have to look at 18,446,744,073,709,551,616 such chunks before two cryptographic hashes matched accidentally.  This number is about 9 billion times larger than the number of chunks in GM's infamous 2 billion line codebase—probably the largest in the world.  Modern operating systems typically contain between 1 million and 100 million chunks.
 
