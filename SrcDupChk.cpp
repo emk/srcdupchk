@@ -55,24 +55,6 @@ void SimpleChecker::ReportMatch(const LineRange &range,
     }
 }
 
-// PLEASE DO NOT REMOVE THIS WARNING.  If you *do* remove this
-// warning, you are responsible for the consequences.
-const char *important_warning =
-"IF YOU RUN SRCDUPCHK ON OTHER PEOPLE'S CODE, PLEASE DO NOT PUBLISH THE\n"
-"RESULTS.  THE OUTPUT OF SRCDUPCHK REVEALS QUITE A BIT OF INFORMATION ABOUT\n"
-"THE INPUT CODE.  YOU SHOULD ASSUME THAT ANY NON-DISCLOSURE AGREEMENT WHICH\n"
-"COVERS THE INPUT CODE ALSO COVERS THE OUTPUT OF SRCDUPCHK.\n"
-"\n"
-"I wrote srcdupchk because--like many users of Linux and GNU systems--I take\n"
-"copyright violations VERY seriously.  I write software for a living, and\n"
-"don\'t want my own code misused.  If you think your code has been "
-"improperly\n"
-"included in Linux or another free program, please run srcdupchk and foward\n"
-"the ouput to the appropriate maintainer.  Like most software developers, I\n"
-"don\'t fear the truth, and want to end any wrongdoing swiftly.  But if you\n"
-"don\'t report problems to the right people, those problems will continue.\n"
-"Please, give us chance to help you; we want to do so.\n\n";
-
 static void usage(ostream &out, bool should_die = true) {
     out << "Usage: srcdupchk [--show-shreds] [--show-matches] "
         << "[--shred-size N] TREE1 TREE2\n\n"
@@ -85,12 +67,9 @@ static void usage(ostream &out, bool should_die = true) {
 }
 
 int main(int argc, char **argv) {
-
-
     // Parse our arguments.
     int i = 1;
     bool show_shreds = false, show_matches = false;
-    bool user_accepts_warning_notice = false;
     int shred_size = Shred::DEFAULT_SIZE;
     char *tree1 = NULL, *tree2 = NULL;
     while (i < argc) {
@@ -105,8 +84,6 @@ int main(int argc, char **argv) {
             show_shreds = true;
         } else if (arg == "--show-matches") {
             show_matches = true;
-        } else if (arg == "--i-agree-to-obey-the-law-and-all-ndas") {
-            user_accepts_warning_notice = true;
         } else if (arg == "--shred-size") {
             if (!(++i < argc))
                 usage(cerr);
@@ -122,11 +99,6 @@ int main(int argc, char **argv) {
     if (!tree1 || !tree2 || i != argc)
         usage(cerr);
 
-    // PLEASE DO NOT REMOVE THIS WARNING.  If you *do* remove this
-    // warning, you are responsible for the consequences.
-    if (!user_accepts_warning_notice)
-        cerr << important_warning;
-    
     try {
         SourceTreeInfo info(tree1, shred_size);
         SimpleChecker checker(&info, shred_size, show_shreds, show_matches);
