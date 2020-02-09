@@ -5,6 +5,7 @@
 *.trs
 Makefile
 /.deps
+/autom4te.cache/
 /compile
 /config.h
 /config.log
