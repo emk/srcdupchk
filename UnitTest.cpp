@@ -82,7 +82,7 @@ public:
 };
 
 void DummyDirWalker::ProcessFile(const string &path) {
-    char *test1_files[TEST1_FILE_COUNT] = {
+    const char *test1_files[TEST1_FILE_COUNT] = {
         "test1/a.txt",
         "test1/arrow.png",
         "test1/b.txt",
