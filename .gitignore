@@ -1,0 +1,13 @@
+*.o
+*.a
+*.in~
+Makefile
+/.deps
+/compile
+/config.h
+/config.log
+/config.status
+/srcdupchk
+/stamp-h1
+/test-driver
+/unittest
