@@ -114,7 +114,8 @@ libdupcheck_a_AR = $(AR) $(ARFLAGS)
 libdupcheck_a_LIBADD =
 am_libdupcheck_a_OBJECTS = md5.$(OBJEXT) HashCode.$(OBJEXT) \
 	FileInfo.$(OBJEXT) DirWalker.$(OBJEXT) \
-	SourceTreeInfo.$(OBJEXT) SourceTreeChecker.$(OBJEXT)
+	SourceTreeInfo.$(OBJEXT) SourceTreeChecker.$(OBJEXT) \
+	CsvQuote.$(OBJEXT)
 libdupcheck_a_OBJECTS = $(am_libdupcheck_a_OBJECTS)
 am__installdirs = "$(DESTDIR)$(bindir)"
 PROGRAMS = $(bin_PROGRAMS) $(noinst_PROGRAMS)
@@ -400,8 +401,8 @@ TEST_LOG_DRIVER = $(SHELL) $(top_srcdir)/test-driver
 TEST_LOG_COMPILE = $(TEST_LOG_COMPILER) $(AM_TEST_LOG_FLAGS) \
 	$(TEST_LOG_FLAGS)
 am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in COPYING \
-	INSTALL README TODO compile depcomp install-sh missing \
-	mkinstalldirs test-driver
+	INSTALL TODO compile depcomp install-sh missing mkinstalldirs \
+	test-driver
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)
@@ -525,7 +526,9 @@ libdupcheck_a_SOURCES = \
 	SourceTreeInfo.h \
 	SourceTreeInfo.cpp \
 	SourceTreeChecker.h \
-	SourceTreeChecker.cpp
+	SourceTreeChecker.cpp \
+	CsvQuote.h \
+	CsvQuote.cpp
 
 srcdupchk_SOURCES = SrcDupChk.cpp
 srcdupchk_LDADD = libdupcheck.a
@@ -652,6 +655,7 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/CsvQuote.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/DirWalker.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/FileInfo.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/HashCode.Po@am__quote@

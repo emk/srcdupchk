@@ -18,11 +18,14 @@
 #include "DcHeaders.h"
 #include "UnitTest.h"
 
+#include <sstream>
+
 #include "HashCode.h"
 #include "FileInfo.h"
 #include "DirWalker.h"
 #include "SourceTreeInfo.h"
 #include "SourceTreeChecker.h"
+#include "CsvQuote.h"
 
 static void test_HashCode() {
     CHECK_EQ(HashCode("Hello").AsString(), "8b1a9953c4611296a827abf8c47804d7");
@@ -173,14 +176,23 @@ static void test_SourceTreeChecker() {
     CHECK_EQ(checker.Finished(), true);
 }
 
+static void test_CsvQuote() {
+    std::ostringstream out;
+    out << CsvQuote("a")
+        << ',' << CsvQuote("c,d")
+        << ',' << CsvQuote("I said \"Hello\"");
+    cout << "Result: <<<" << out.str() << ">>>" << endl;
+    CHECK_EQ(out.str(), "a,\"c,d\",\"I said \"\"Hello\"\"\"");
+}
+
 int main(int argc, char **argv) {
     try {
-
         test_HashCode();
         test_FileInfo();
         test_DirWalker();
         test_SourceTreeInfo();
         test_SourceTreeChecker();
+        test_CsvQuote();
 
     } catch (std::exception &e) {
         cerr << PACKAGE_NAME << ": " << e.what() << endl;

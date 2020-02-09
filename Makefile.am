@@ -20,7 +20,9 @@ libdupcheck_a_SOURCES = \
 	SourceTreeInfo.h \
 	SourceTreeInfo.cpp \
 	SourceTreeChecker.h \
-	SourceTreeChecker.cpp
+	SourceTreeChecker.cpp \
+	CsvQuote.h \
+	CsvQuote.cpp
 
 srcdupchk_SOURCES = SrcDupChk.cpp
 srcdupchk_LDADD = libdupcheck.a

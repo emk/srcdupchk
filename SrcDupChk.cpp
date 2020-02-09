@@ -17,16 +17,14 @@
 
 #include "DcHeaders.h"
 #include "SourceTreeChecker.h"
+#include "CsvQuote.h"
 
 class SimpleChecker : public SourceTreeChecker {
     bool m_show_shreds;
-    bool m_show_matches;
 
 public:
     SimpleChecker(const SourceTreeInfo *check_against, int shred_size,
-                  bool show_shreds, bool show_matches)
-        : SourceTreeChecker(check_against, shred_size),
-          m_show_shreds(show_shreds), m_show_matches(show_matches) {}
+                  bool show_shreds);
 
 protected:
     void ReportHit(const LineRange &range1, const LineRange &range2);
@@ -34,31 +32,42 @@ protected:
                      const vector<LineRange> &matches);
 };
 
+SimpleChecker::SimpleChecker(const SourceTreeInfo *check_against, int shred_size,
+                             bool show_shreds)
+    : SourceTreeChecker(check_against, shred_size),
+      m_show_shreds(show_shreds)
+{
+    // Print our CSV header.
+    cout << "tree2,tree2_first,tree2_last,"
+         << "tree1,tree1_first,tree1_last"
+         << endl;
+}
+
 void SimpleChecker::ReportHit(const LineRange &range1,
                               const LineRange &range2)
 {
     if (m_show_shreds)
-        cout << "SHREDS:" << range1 << ":" << range2 << endl;
+        cerr << "SHREDS:" << range1 << ":" << range2 << endl;
 }
 
 void SimpleChecker::ReportMatch(const LineRange &range,
                                 const vector<LineRange> &matches)
 {
-    cout << range << endl;
-    if (m_show_matches) {
-        vector<LineRange>::const_iterator i = matches.begin();
-        for (; i != matches.end(); ++i) {
-            cout << "MATCH:" << range << ":" << *i << endl;
-        }
+    vector<LineRange>::const_iterator i = matches.begin();
+    for (; i != matches.end(); ++i) {
+        cout << CsvQuote(range.path)
+             << "," << range.first << "," << range.last
+             << "," << CsvQuote(i->path)
+             << "," << i->first << "," << i->last
+             << endl;
     }
 }
 
 static void usage(ostream &out, bool should_die = true) {
-    out << "Usage: srcdupchk [--show-shreds] [--show-matches] "
+    out << "Usage: srcdupchk [--show-shreds] "
         << "[--shred-size N] TREE1 TREE2\n\n"
         << "Compare TREE1 and TREE2 for matches using N-line \"shreds\".\n"
-        << "Unless '--show-shreds' or '--show-matches' is specified, the\n"
-        << "output only includes file names and line numbers for TREE2.\n"
+        << "--show-shreds will print low-level matches to stderr."
         << flush;
     if (should_die)
         exit(1);
@@ -67,7 +76,7 @@ static void usage(ostream &out, bool should_die = true) {
 int main(int argc, char **argv) {
     // Parse our arguments.
     int i = 1;
-    bool show_shreds = false, show_matches = false;
+    bool show_shreds = false;
     int shred_size = Shred::DEFAULT_SIZE;
     char *tree1 = NULL, *tree2 = NULL;
     while (i < argc) {
@@ -80,8 +89,6 @@ int main(int argc, char **argv) {
             exit(0);
         } else if (arg == "--show-shreds") {
             show_shreds = true;
-        } else if (arg == "--show-matches") {
-            show_matches = true;
         } else if (arg == "--shred-size") {
             if (!(++i < argc))
                 usage(cerr);
@@ -99,7 +106,7 @@ int main(int argc, char **argv) {
 
     try {
         SourceTreeInfo info(tree1, shred_size);
-        SimpleChecker checker(&info, shred_size, show_shreds, show_matches);
+        SimpleChecker checker(&info, shred_size, show_shreds);
         checker.Walk(tree2);
     } catch (std::exception &e) {
         cerr << PACKAGE_NAME << ": " << e.what() << endl;
