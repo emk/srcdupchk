@@ -1,6 +1,8 @@
 *.o
 *.a
 *.in~
+*.log
+*.trs
 Makefile
 /.deps
 /compile
