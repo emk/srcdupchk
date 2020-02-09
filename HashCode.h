@@ -20,6 +20,8 @@
 #ifndef HASHCODE_H
 #define HASHCODE_H
 
+#include <string.h>
+
 class HashCode {
     enum { BYTES_IN_MD5_SUM = 16 };
     unsigned char m_hash[BYTES_IN_MD5_SUM];
